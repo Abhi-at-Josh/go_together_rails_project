@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   include JsonWebToken
 
-  before_action :authenticate_request, except: [:index, :show, :login, :signup]
+  before_action :authenticate_request, except: [:index, :show]
 
   private
 
@@ -23,6 +23,6 @@ class ApplicationController < ActionController::API
       Admin.find(decoded[:user_id])  # Fetch admin if it's an admin token
     else
       User.find(decoded[:user_id])  # Default to User if it's a regular user token
-    end
+    end 
   end
 end
