@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::API
+  include ActionController::Flash
   include JsonWebToken
 
-  before_action :authenticate_request, except: [:index, :show]
-
+  # before_action :authenticate_request, except: [:index, :show]
+  before_action :authenticate_request, unless: -> { devise_controller? } ,except: [:index, :show]
   private
 
   def authenticate_request
