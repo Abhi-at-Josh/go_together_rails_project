@@ -21,6 +21,16 @@ user2 = User.create!(
   age: 28
 )
 
+user3 = User.create!(
+  first_name: 'Jane',
+  last_name: 'Smith',
+  phone_no: '9876543211',  # Unique phone number
+  email: 'abhijeetlokhande2580@gmail.com',  # Unique email
+  password: 'password',  # Set password directly (Rails will handle hashing)
+  gender: 'Female',
+  age: 28
+)
+
 # Create admins with unique emails
 admin = Admin.create!(
   first_name: 'Admin',

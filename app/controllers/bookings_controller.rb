@@ -1,18 +1,17 @@
 class BookingsController < ApplicationController
-
-  #GET /bookings
+  # GET /bookings
   def index
     @booking = Booking.all
     render json: @booking
   end
 
-  #GET /booking/:id
+  # GET /booking/:id
   def show
     @booking = Booking.find(params[:id])
     render json: @booking
   end
-   
-  #POST /bookings
+
+  # POST /bookings
   def create
     @booking = Booking.new(booking_params)
     if @ride.save
@@ -21,7 +20,7 @@ class BookingsController < ApplicationController
       render json: @booking.error, status: :unauthorized
     end
   end
-  
+
   # DELETE /bookings/:id
   def destroy
     @booking = Booking.find_by(id: params[:id])
@@ -36,17 +35,17 @@ class BookingsController < ApplicationController
 
   private
   def booking_params
-    params.require(:booking).parmit(:ride_id, :rating_id ,:status)
+    params.require(:booking).parmit(:ride_id, :rating_id, :status)
   end
 
    # Ensure user is authenticate via JWt
    def authenticate_user!
-    token = request.headers['Authorization']&.split(' ')&.last
+    token = request.headers["Authorization"]&.split(" ")&.last
     decode_token = decode_token(token)
     if decode_token
       @current_user = User.find(decoded_token[:user_id])
     else
-      render json: { error: 'Unauthorized'}, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 

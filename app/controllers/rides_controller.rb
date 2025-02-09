@@ -5,7 +5,7 @@ class RidesController < ApplicationController
   # GET /rides
   def index
     @rides = Ride.all
-    render json: @rides
+    render json: @rides, each_serializer: RideSerializer, status: :ok
   end
 
   # GET /rides/:id
@@ -49,12 +49,12 @@ class RidesController < ApplicationController
 
   # Ensure user is authenticated via JWT
   def authenticate_user!
-    token = request.headers['Authorization']&.split(' ')&.last
+    token = request.headers["Authorization"]&.split(" ")&.last
     decoded_token = decode_token(token)
     if decoded_token
       @current_user = User.find(decoded_token[:user_id])
     else
-      render json: { error: 'Unauthorized' }, status: :unauthorized
+      render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
 

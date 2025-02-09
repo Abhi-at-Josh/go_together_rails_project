@@ -3,4 +3,3 @@ class FixUsersPasswordColumn < ActiveRecord::Migration[7.2]
     rename_column :users, :password, :password_digest
   end
 end
-  

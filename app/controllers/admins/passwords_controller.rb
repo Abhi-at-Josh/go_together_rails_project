@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class Admins::PasswordsController < Devise::PasswordsController
-  skip_before_action :authenticate_request,raise: false   
+  skip_before_action :authenticate_request, raise: false
   include ActionController::Helpers
   include ActionController::Redirecting
   include ActionController::Rendering
-  
+
   # GET /resource/password/new
   def new
     super

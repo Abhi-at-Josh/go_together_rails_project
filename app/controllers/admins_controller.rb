@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:signup, :login]
-  before_action :set_admin, only: [:show, :update, :destroy]
+  skip_before_action :authenticate_request, only: [ :signup, :login ]
+  before_action :set_admin, only: [ :show, :update, :destroy ]
 
   # POST /admins/signup
   def signup
@@ -17,22 +17,22 @@ class AdminsController < ApplicationController
   def login
     @admin = Admin.find_by_email(params[:email])
     if @admin&.authenticate(params[:password])
-      token = jwt_encode(admin_id: @admin.id )
+      token = jwt_encode(admin_id: @admin.id)
       render json: { token: token }, status: :ok
     else
-      render json: { error: 'Invalid email or password' }, status: :unauthorized
+      render json: { error: "Invalid email or password" }, status: :unauthorized
     end
   end
 
   # GET /admins
   def index
     @admins = Admin.all
-    render json: @admins, status: :ok
+    render json: @admins, each_serializer: AdminSerializer, status: :ok
   end
 
   # GET /admins/:id
   def show
-    render json: @admin, status: :ok
+    render json: @admin, each_serializer: AdminSerializer, status: :ok
   end
 
   # PUT /admins/:id
@@ -47,7 +47,7 @@ class AdminsController < ApplicationController
   # DELETE /admins/:id
   def destroy
     @admin.destroy
-    render json: { message: 'Admin deleted successfully' }, status: :ok
+    render json: { message: "Admin deleted successfully" }, status: :ok
   end
 
   private

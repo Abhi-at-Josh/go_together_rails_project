@@ -1,6 +1,7 @@
 class User < ApplicationRecord
-  require "securerandom"
-  
+  # require "securerandom"
+  # require 'rails_helper'
+
   has_secure_password
 
   validates :first_name, :last_name, :phone_no, :email, presence: true

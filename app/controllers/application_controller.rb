@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
   include JsonWebToken
 
   # before_action :authenticate_request, except: [:index, :show]
-  before_action :authenticate_request, unless: -> { devise_controller? } ,except: [:index, :show]
+  before_action :authenticate_request, unless: -> { devise_controller? }, except: [ :index, :show ]
   private
 
   def authenticate_request
@@ -20,10 +20,10 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate_user_or_admin(decoded)
-    if decoded[:user_type] == 'admin'
+    if decoded[:user_type] == "admin"
       Admin.find(decoded[:user_id])  # Fetch admin if it's an admin token
     else
       User.find(decoded[:user_id])  # Default to User if it's a regular user token
-    end 
+    end
   end
 end
