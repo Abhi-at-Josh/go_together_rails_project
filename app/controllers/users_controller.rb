@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     def signup
       @user = User.new(user_params)
       if @user.save
-        token = jwt_encode(user_id: @user.id)
+        token = jwt_encode(user_id: @user.id,user_type:"user")
         render json: { user: @user, token: token }, status: :created
       else
         render json: { error: @user.errors.full_messages }, status: :unprocessable_entity
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
     def login
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
-        token = jwt_encode(user_id: @user.id)
+        token = jwt_encode(user_id: @user.id,user_type: "user")
         render json: { user: @user, token: token }, status: :ok
       else
         render json: { error: "Invalid email or password" }, status: :unauthorized
