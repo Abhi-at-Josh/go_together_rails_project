@@ -24,6 +24,12 @@ Rails.application.routes.draw do
   resources :rides
   resources :ratings
   resources :bookings
+  resources :ride_requests do 
+    collection do 
+      post 'booking'
+    end
+  end
+  
   resources :admins do
     collection do
       get :rides, to: 'admins#rides_show'
@@ -38,7 +44,7 @@ Rails.application.routes.draw do
 
   post '/admins/signup', to: 'admins#signup'
   post '/admins/login', to: 'admins#login'
-
+  post "/users/signup", to: "users#signup"
   # Routes for Progressive Web App (PWA)
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

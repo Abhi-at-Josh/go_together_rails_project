@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-    skip_before_action :authenticate_request, only: [ :signup, :login, :index, :show ]
-    before_action :set_user, only: [ :show, :update, :destroy ]
-
+    skip_before_action :authenticate_request, only: [ :signup, :login, :index, :show , :update_password ,:destroy ]
+    before_action :set_user, only: [ :show, :update,  ]
+  
     # GET /users
     def index
       @users = User.all
@@ -18,6 +18,8 @@ class UsersController < ApplicationController
       @user = User.new(user_params)
       if @user.save
         token = jwt_encode(user_id: @user.id,user_type:"user")
+
+        UserMailer.welcome_email(@user).deliver_later
         render json: { user: @user, token: token }, status: :created
       else
         render json: { error: @user.errors.full_messages }, status: :unprocessable_entity
@@ -29,6 +31,7 @@ class UsersController < ApplicationController
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
         token = jwt_encode(user_id: @user.id,user_type: "user")
+        UserMailer.welcome_email(@user).deliver_later
         render json: { user: @user, token: token }, status: :ok
       else
         render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -46,8 +49,14 @@ class UsersController < ApplicationController
 
     # DELETE /users/{id}
     def destroy
-      @user.destroy
-      render json: { message: "User deleted successfully" }, status: :ok
+      @user = User.find_by(id: params[:id])
+    
+      if @user
+        @user.destroy
+        render json: { message: "User deleted successfully" }, status: :ok
+      else
+        render json: { error: "User not found" }, status: :not_found
+      end
     end
       
     # POST /users/reset_password_request

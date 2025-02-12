@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_04_051601) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_11_043017) do
   create_table "admins", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -51,6 +51,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_051601) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
+  create_table "ride_requests", force: :cascade do |t|
+    t.integer "requester_id", null: false
+    t.string "starting_coordinates", null: false
+    t.string "ending_coordinates", null: false
+    t.time "ride_time", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["requester_id"], name: "index_ride_requests_on_requester_id"
+    t.index ["status"], name: "index_ride_requests_on_status"
+  end
+
   create_table "rides", force: :cascade do |t|
     t.integer "passenger_id"
     t.integer "rider_id"
@@ -60,6 +72,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_051601) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.time "ride_time", default: "2000-01-01 00:00:00", null: false
+    t.integer "ride_request_id"
+    t.index ["ride_request_id"], name: "index_rides_on_ride_request_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -78,4 +93,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_04_051601) do
   add_foreign_key "bookings", "rides"
   add_foreign_key "ratings", "rides"
   add_foreign_key "ratings", "users"
+  add_foreign_key "ride_requests", "users", column: "requester_id"
+  add_foreign_key "rides", "ride_requests"
 end
