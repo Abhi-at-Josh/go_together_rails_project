@@ -1,12 +1,12 @@
 class AdminsController < ApplicationController
-  skip_before_action :authenticate_request, only: [ :signup, :login ,:users_index ,:rides_show ,:ratings ,:bookings, :users_show   ]
+  skip_before_action :authenticate_request, only: [ :signup, :login, :users_index, :rides_show, :ratings, :bookings, :users_show   ]
   before_action :set_admin, only: [ :show, :update, :destroy ]
 
   # POST /admins/signup
   def signup
     @admin = Admin.new(admin_params)
     if @admin.save
-      token = jwt_encode(admin_id: @admin.id , user_type:"admin")  # Generate JWT token
+      token = jwt_encode(admin_id: @admin.id, user_type: "admin")
       render json: { admin: @admin, token: token }, status: :created
     else
       render json: { error: @admin.errors.full_messages }, status: :unprocessable_entity
@@ -16,9 +16,8 @@ class AdminsController < ApplicationController
   # POST /admins/login
   def login
     @admin = Admin.find_by_email(params[:email])
-    # if @admin&.authenticate(params[:password])
-    if @admin&.valid_password?(params[:password]) 
-      token = jwt_encode(admin_id: @admin.id, user_type:"admin")
+    if @admin&.valid_password?(params[:password])
+      token = jwt_encode(admin_id: @admin.id, user_type: "admin")
       render json: { token: token }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -46,13 +45,9 @@ class AdminsController < ApplicationController
   end
 
   # DELETE /admins/:id
-  # def destroy
-  #   @admin.destroy
-  #   render json: { message: "Admin deleted successfully" }, status: :ok
-  # end
   def destroy
-    @admin = Admin.find(params[:id])  # Find admin by the id in the URL
-    
+    @admin = Admin.find(params[:id])
+
     if @admin
       @admin.destroy
       render json: { message: "Admin deleted successfully" }, status: :ok
@@ -60,9 +55,9 @@ class AdminsController < ApplicationController
       render json: { error: "Admin not found" }, status: :not_found
     end
   end
-  
 
-# Admin manages users CRUD
+
+  # Admin manages users CRUD
   # GET /admins/users
   def users_index
     @users = User.all
@@ -93,24 +88,24 @@ class AdminsController < ApplicationController
   end
 
   # Admin manages rides CRUD
-  #GET /rides
+  # GET /rides
   def rides_show
     @rides=Ride.all
-    render json:@rides, status: :ok
+    render json: @rides, status: :ok
   end
 
   # Admin manages rating CRUD
-  #GET /ratings
+  # GET /ratings
   def ratings
     @ratings=Rating.all
-    render json:@ratings, status: :ok
+    render json: @ratings, status: :ok
   end
 
- # Admin manages bookings CRUD
-  #GET /bookings
+  # Admin manages bookings CRUD
+  # GET /bookings
   def bookings
     @bookings=Booking.all
-    render json:@bookings, status: :ok
+    render json: @bookings, status: :ok
   end
 
   private
@@ -127,9 +122,7 @@ class AdminsController < ApplicationController
   end
 
   def authorize_admin
-    # Ensure the current user is an admin (based on JWT token)
     return if @current_user && @current_user.user_type == "admin"
-
     render json: { error: "Unauthorized" }, status: :unauthorized
   end
-end 
+end

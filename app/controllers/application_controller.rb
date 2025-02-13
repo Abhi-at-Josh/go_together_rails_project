@@ -23,9 +23,9 @@ class ApplicationController < ActionController::API
   def authenticate_user_or_admin(decoded)
     Rails.logger.debug("Decoded user_type: #{decoded[:user_type]}")
     if decoded[:user_type] == "admin"
-      Admin.find(decoded[:admin_id])  # Fetch admin if it's an admin token
+      Admin.find(decoded[:admin_id])
     elsif decoded[:user_type] == "user"
-      User.find(decoded[:user_id])  # Default to User if it's a regular user token
+      User.find(decoded[:user_id])
     else
       render json: { error: "Invalid token" }, status: :unauthorized
     end

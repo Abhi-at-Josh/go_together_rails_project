@@ -1,15 +1,15 @@
 class RideRequestsController < ApplicationController
-  before_action :set_ride_request, only: [:show, :update, :destroy]
-  skip_before_action :authenticate_request ,only: [:booking]
+  before_action :set_ride_request, only: [ :show, :update, :destroy ]
+  skip_before_action :authenticate_request, only: [ :booking ]
   # GET /ride_requests
   def index
     ride_requests = RideRequest.all
-    render json: ride_requests,each_serializer: RideRequestsSerializer, status: :ok
+    render json: ride_requests, each_serializer: RideRequestsSerializer, status: :ok
   end
 
   # GET /ride_requests/:id
   def show
-    render json: @ride_request,each_serializer: RideRequestsSerializer, status: :ok
+    render json: @ride_request, each_serializer: RideRequestsSerializer, status: :ok
   end
 
   # POST /ride_requests
@@ -17,6 +17,7 @@ class RideRequestsController < ApplicationController
     ride_request = RideRequest.new(ride_request_params)
 
     if ride_request.save
+      RideStatusUpdateJob.perform_later
       render json: ride_request, status: :created
     else
       render json: { errors: ride_request.errors.full_messages }, status: :unprocessable_entity
@@ -38,18 +39,16 @@ class RideRequestsController < ApplicationController
     render json: { message: "Ride request deleted successfully" }, status: :ok
   end
 
-  #POST /booking ride 
-  def booking # Search by coordinates   
+  # POST /booking ride
+  def booking # Search by coordinates
     starting_coords = params[:starting_coordinates]
     ending_coords = params[:ending_coordinates]
-  
+
     @rides = RideRequest.where(starting_coordinates: starting_coords, ending_coordinates: ending_coords)
-  
-    # if @rides.any?
-    #   render json: { status: "success", rides: ActiveModelSerializers::SerializableResource.new(@rides, each_serializer: RideRequestsSerializer) }, status: :ok
+
     if @rides.any?
-      render json: { 
-        status: "success", 
+      render json: {
+        status: "success",
         rides: @rides.map do |ride|
           {
             ride_id: ride.id,
@@ -61,12 +60,12 @@ class RideRequestsController < ApplicationController
             status: ride.status
           }
         end
-      }, status: :ok 
+      }, status: :ok
     else
       render json: { status: "not_found", message: "No matching rides found" }, status: :not_found
     end
   end
-  
+
   private
 
   # Find ride request before show, update, or delete
@@ -80,6 +79,6 @@ class RideRequestsController < ApplicationController
 
   # Strong parameters
   def ride_request_params
-    params.require(:ride_request).permit(:requester_id, :starting_coordinates, :ending_coordinates, :ride_time, :status)
+    params.require(:ride_request).permit(:requester_id, :starting_coordinates, :ending_coordinates, :ride_time, :status, :price)
   end
 end

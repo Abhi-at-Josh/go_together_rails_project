@@ -1,0 +1,6 @@
+:scheduler:
+  :schedule:
+    ride_status_update_job:
+      cron: "*/5 * * * *"  # Runs the job every 5 minutes
+      class: "RideStatusUpdateJob"
+      queue: default

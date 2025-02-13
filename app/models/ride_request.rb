@@ -11,7 +11,7 @@ class RideRequest < ApplicationRecord
 
   # Ensure starting and ending coordinates are not the same
   validate :different_start_and_end_locations
-
+  validates :price, presence: true, numericality: { greater_than: 0 }
   private
 
   def different_start_and_end_locations

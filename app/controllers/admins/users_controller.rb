@@ -8,9 +8,9 @@ class Admin::UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     if @user.destroy
-      redirect_to admins_users_path, notice: 'User deleted successfully.'
+      redirect_to admins_users_path, notice: "User deleted successfully."
     else
-      redirect_to admins_users_path, alert: 'Failed to delete user.'
+      redirect_to admins_users_path, alert: "Failed to delete user."
     end
   end
 end

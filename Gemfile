@@ -20,7 +20,7 @@ gem "jbuilder"
 gem "devise", "~> 4.9"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
-gem 'bootstrap', '~> 5.0'
+gem "bootstrap", "~> 5.0"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
@@ -67,3 +67,5 @@ group :development, :test do
 end
 
 gem "cssbundling-rails", "~> 1.4"
+gem "sidekiq"
+gem "sidekiq-scheduler"

@@ -38,8 +38,7 @@ class BookingsController < ApplicationController
     params.require(:booking).parmit(:ride_id, :rating_id, :status)
   end
 
-   # Ensure user is authenticate via JWt
-   def authenticate_user!
+  def authenticate_user!
     token = request.headers["Authorization"]&.split(" ")&.last
     decode_token = decode_token(token)
     if decode_token
