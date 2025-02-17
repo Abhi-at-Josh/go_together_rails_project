@@ -1,8 +1,8 @@
 class RatingsController < ApplicationController
   # GET /rating
   def index
-  @rating = Rating.all
-  render json: @rating
+  @ratings = Rating.all
+  render json: @ratings
   end
 
   # GET /rating/:id

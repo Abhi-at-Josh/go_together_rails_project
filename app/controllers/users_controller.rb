@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
     skip_before_action :authenticate_request, only: [ :signup, :login, :index, :show, :update_password, :destroy ]
-    before_action :set_user, only: [ :show, :update  ]
 
     # GET /users
     def index
@@ -10,7 +9,7 @@ class UsersController < ApplicationController
 
     # GET /users/{id}
     def show
-      render json: @user, status: :ok
+      render json: user, status: :ok
     end
 
     # POST /users/signup
@@ -40,10 +39,10 @@ class UsersController < ApplicationController
 
     # PUT /users/{id}
     def update
-      if @user.update(user_params)
-        render json: @user, status: :ok
+      if user.update(user_params)
+        render json: user, status: :ok
       else
-        render json: { error: @user.errors.full_messages }, status: :unprocessable_entity
+        render json: { error: user.errors.full_messages }, status: :unprocessable_entity
       end
     end
 
@@ -97,8 +96,8 @@ class UsersController < ApplicationController
       params.permit(:first_name, :last_name, :email, :phone_no, :password, :password_confirmation, :gender, :age)
     end
 
-    def set_user
-      @user = User.find(params[:id])
+    def user
+      @user ||= User.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: { error: "User not found" }, status: :not_found
     end
