@@ -18,7 +18,7 @@ class AdminsController < ApplicationController
     @admin = Admin.find_by_email(params[:email])
     if @admin&.valid_password?(params[:password])
       token = jwt_encode(admin_id: @admin.id, user_type: "admin")
-      render json: { token: token }, status: :ok
+      render json: { token: }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
     end
@@ -104,7 +104,7 @@ class AdminsController < ApplicationController
   # Admin manages bookings CRUD
   # GET /bookings
   def bookings
-    @bookings=Booking.all
+    @bookings = Booking.all
     render json: @bookings, status: :ok
   end
 
@@ -117,12 +117,14 @@ class AdminsController < ApplicationController
   def admin_params
     params.permit(:first_name, :last_name, :email, :password)
   end
+
   def user_params
     params.permit(:first_name, :last_name, :email, :phone_no, :password, :password_confirmation, :gender, :age)
   end
 
   def authorize_admin
     return if @current_user && @current_user.user_type == "admin"
+
     render json: { error: "Unauthorized" }, status: :unauthorized
   end
 end
