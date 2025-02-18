@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     # POST /users/signup
     def signup
       @user = User.new(user_params)
-      if @user.save
+      if @user.save!
         token = jwt_encode(user_id: @user.id)
         render json: { user: @user, token: token }, status: :created
       else
@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     private
   
     def user_params
-      params.permit(:first_name, :last_name, :email, :phone_no, :password, :password_confirmation, :gender, :age)
+      params.require(:user).permit(:first_name, :last_name, :email, :phone_no, :password, :password_confirmation, :gender, :age)
     end
   
     def set_user

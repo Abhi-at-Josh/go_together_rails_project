@@ -1,5 +1,5 @@
 class Rating < ApplicationRecord
-  belongs_to :ride
+  belongs_to :ride, optional: false
   belongs_to :user
 
   validates :rating, presence: true, inclusion: { in: 1..5 }
