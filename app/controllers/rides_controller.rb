@@ -1,7 +1,5 @@
-# app/controllers/rides_controller.rb
 class RidesController < ApplicationController
   # before_action :authenticate_user!
-
   # GET /rides
   def index
     @rides = Ride.all
@@ -27,7 +25,7 @@ class RidesController < ApplicationController
   # PATCH/PUT /rides/:id
   def update
     @ride = Ride.find(params[:id])
-    if @ride.update(ride_params)
+    if @ride.update!(ride_params)
       render json: @ride
     else
       render json: @ride.errors, status: :unprocessable_entity

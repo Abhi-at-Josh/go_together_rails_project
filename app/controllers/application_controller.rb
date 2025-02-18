@@ -4,6 +4,7 @@ class ApplicationController < ActionController::API
 
   # before_action :authenticate_request, except: [:index, :show]
   before_action :authenticate_request, unless: -> { devise_controller? }, except: [ :index, :show ]
+  
   private
 
   def authenticate_request
