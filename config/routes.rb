@@ -1,14 +1,30 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Devise authentication for admins
+  devise_for :admins, controllers: {
+    sessions: 'admins/sessions',
+    registrations: 'admins/registrations',
+    passwords: 'admins/passwords'
+  }
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Admin namespace for admin dashboard and actions
+  namespace :admin do
+    root to: "admins_controller#index"  # Admin dashboard root
+    resources :users, only: [:index, :show, :update, :destroy]  # Admin actions for users
+  end
+
+  # Authentication route for general user login
+  post "/auth/login", to: "authentication#login"
+
+  # Health check route
   get "up" => "rails/health#show", as: :rails_health_check
+  
+  # Resources for other models
+  resources :users, except: [:new, :edit]  # Excluding new and edit, as admin will handle user creation
+  resources :rides
+  resources :ratings
+  resources :bookings
 
-  # Render dynamic PWA files from app/views/pwa/*
+  # Routes for Progressive Web App (PWA)
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 end
