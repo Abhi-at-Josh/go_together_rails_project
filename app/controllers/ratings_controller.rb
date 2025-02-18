@@ -2,13 +2,13 @@ class RatingsController < ApplicationController
 
   #GET /rating
   def index
-  @rating = Rating.all
-  render json: @rating
+  @ratings = Rating.all
+  render json: @ratings
   end
 
   #GET /rating/:id
   def show
-  @rating = Rating.find(params[:id])
+  @rating = Rating.find_by(params[:id])
   render json: @rating
   end
 

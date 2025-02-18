@@ -7,7 +7,7 @@ class AdminsController < ApplicationController
     @admin = Admin.new(admin_params)
     if @admin.save
       token = jwt_encode(admin_id: @admin.id)  # Generate JWT token
-      render json: { admin: @admin, token: token }, status: :created
+      render json: { admin: @admin, token: }, status: :created
     else
       render json: { error: @admin.errors.full_messages }, status: :unprocessable_entity
     end
@@ -18,7 +18,7 @@ class AdminsController < ApplicationController
     @admin = Admin.find_by_email(params[:email])
     if @admin&.authenticate(params[:password])
       token = jwt_encode(admin_id: @admin.id )
-      render json: { token: token }, status: :ok
+      render json: { token: }, status: :ok
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
@@ -48,12 +48,14 @@ class AdminsController < ApplicationController
   def destroy
     @admin.destroy
     render json: { message: 'Admin deleted successfully' }, status: :ok
+  rescue ActiveRecord::RecordNotDestroyed => e
+    render json: { message: "Error in deleting record" }
   end
 
   private
 
   def set_admin
-    @admin = Admin.find(params[:id])
+    @admin = Admin.find_by(params[:id])
   end
 
   def admin_params

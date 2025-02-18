@@ -2,13 +2,13 @@ class BookingsController < ApplicationController
 
   #GET /bookings
   def index
-    @booking = Booking.all
-    render json: @booking
+    @bookings = Booking.all
+    render json: @bookings
   end
 
   #GET /booking/:id
   def show
-    @booking = Booking.find(params[:id])
+    @booking = Booking.find_by(params[:id])
     render json: @booking
   end
    
