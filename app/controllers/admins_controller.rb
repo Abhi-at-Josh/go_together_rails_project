@@ -1,12 +1,13 @@
 class AdminsController < ApplicationController
-  skip_before_action :authenticate_request, only: [ :signup, :login, :users_index, :rides_show, :ratings, :bookings, :users_show   ]
-  before_action :set_admin, only: [ :show, :update, :destroy ]
+  skip_before_action :authenticate_request, only: [ :signup, :login, :users_index, :rides_show, :ratings, :bookings, :users_show  ,:destroy  ]
+  before_action :set_admin, only: [ :show, :update ]
 
   # POST /admins/signup
   def signup
     @admin = Admin.new(admin_params)
     if @admin.save
       token = jwt_encode(admin_id: @admin.id, user_type: "admin")
+      AdminMailer.login_notification(@admin).deliver_now
       render json: { admin: @admin, token: token }, status: :created
     else
       render json: { error: @admin.errors.full_messages }, status: :unprocessable_entity
@@ -18,6 +19,7 @@ class AdminsController < ApplicationController
     @admin = Admin.find_by_email(params[:email])
     if @admin&.valid_password?(params[:password])
       token = jwt_encode(admin_id: @admin.id, user_type: "admin")
+      AdminMailer.login_notification(@admin).deliver_now
       render json: { token: }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -65,7 +67,7 @@ class AdminsController < ApplicationController
   end
 
   # GET /admins/users/:id
-  def users_show
+  def users_show  
     @user = User.find(params[:id])
     render json: @user, status: :ok
   end

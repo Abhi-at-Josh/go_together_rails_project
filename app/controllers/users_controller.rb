@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       if @user.save
         token = jwt_encode(user_id: @user.id, user_type: "user")
 
-        UserMailer.welcome_email(@user).deliver_later
+        UserMailer.welcome_email(@user).deliver_now
         render json: { user: @user, token: token }, status: :created
       else
         render json: { error: @user.errors.full_messages }, status: :unprocessable_entity
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
         token = jwt_encode(user_id: @user.id, user_type: "user")
-        UserMailer.welcome_email(@user).deliver_later
+        UserMailer.welcome_email(@user).deliver_now
         render json: { user: @user, token: token }, status: :ok
       else
         render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -67,7 +67,7 @@ class UsersController < ApplicationController
         @user.save
 
         # Send email with reset password instructions (you can use a mailer here)
-        PasswordResetMailer.with(user: @user).reset_password_email.deliver_later
+        PasswordResetMailer.with(user: @user).reset_password_email.deliver_now
 
         render json: { message: "Password reset instructions have been sent to your email." }, status: :ok
       else
