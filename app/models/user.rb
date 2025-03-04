@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  # require "securerandom"
-  # require 'rails_helper'
+  # has_many :posts, dependent: :destroy
+  # has_many :comments, dependent: :destroy
   after_create :send_welcome_email
   has_secure_password
 
@@ -13,3 +13,4 @@ class User < ApplicationRecord
     UserMailer.welcome_email(self).deliver_later
    end
 end
+# 

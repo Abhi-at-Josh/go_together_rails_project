@@ -16,6 +16,11 @@ class ApplicationController < ActionController::API
       decoded = jwt_decode(token)
       Rails.logger.debug("Decoded JWT: #{decoded}")
       @current_user = authenticate_user_or_admin(decoded)
+
+      unless @current_user
+        return render json: { error: "Unauthorized user" }, status: :unauthorized
+      end
+      
     rescue JWT::DecodeError => e
       render json: { error: "Invalid token: #{e.message}" }, status: :unauthorized
     end

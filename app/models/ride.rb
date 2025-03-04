@@ -1,6 +1,6 @@
 class Ride < ApplicationRecord
-  belongs_to :passenger, class_name: "User"
-  belongs_to :rider, class_name: "User"
+  belongs_to :passenger, class_name: "User" ,foreign_key: 'passenger_id'
+  belongs_to :rider, class_name: "User",foreign_key: 'rider_id'
 
   has_many :ratings
   has_many :bookings

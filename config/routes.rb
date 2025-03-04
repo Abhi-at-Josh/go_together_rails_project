@@ -14,13 +14,20 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :users, except: [ :new, :edit ]
+  resources :users, except: [ :new, :edit ] do 
+      collection do
+        post "login"
+      end
+  end
   resources :rides
   resources :ratings
   resources :bookings
   resources :ride_requests do
     collection do
       post "booking"
+    end
+    member do
+      delete "destroy"
     end
   end
 

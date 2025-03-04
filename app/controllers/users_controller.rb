@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
     skip_before_action :authenticate_request, only: [ :signup, :login, :index, :show, :update_password, :destroy ]
-
     # GET /users
     def index
       @users = User.all
@@ -30,7 +29,7 @@ class UsersController < ApplicationController
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
         token = jwt_encode(user_id: @user.id, user_type: "user")
-        UserMailer.welcome_email(@user).deliver_now
+        UserMailer.welcome_email(@user).deliver_later 
         render json: { user: @user, token: token }, status: :ok
       else
         render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -51,6 +50,7 @@ class UsersController < ApplicationController
       @user = User.find_by(id: params[:id])
 
       if @user
+
         @user.destroy
         render json: { message: "User deleted successfully" }, status: :ok
       else

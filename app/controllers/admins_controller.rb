@@ -7,7 +7,7 @@ class AdminsController < ApplicationController
     @admin = Admin.new(admin_params)
     if @admin.save
       token = jwt_encode(admin_id: @admin.id, user_type: "admin")
-      AdminMailer.login_notification(@admin).deliver_now
+      AdminMailer.login_notification(@admin).deliver_later
       render json: { admin: @admin, token: token }, status: :created
     else
       render json: { error: @admin.errors.full_messages }, status: :unprocessable_entity
@@ -19,7 +19,7 @@ class AdminsController < ApplicationController
     @admin = Admin.find_by_email(params[:email])
     if @admin&.valid_password?(params[:password])
       token = jwt_encode(admin_id: @admin.id, user_type: "admin")
-      AdminMailer.login_notification(@admin).deliver_now
+      AdminMailer.login_notification(@admin).deliver_later
       render json: { token: }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
@@ -109,6 +109,12 @@ class AdminsController < ApplicationController
     @bookings = Booking.all
     render json: @bookings, status: :ok
   end
+
+  def ride_request
+    @ride_requests  = RideRequest.all
+    render josn: @booking , status: :ok 
+  end
+
 
   private
 
