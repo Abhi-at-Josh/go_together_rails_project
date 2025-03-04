@@ -1,0 +1,30 @@
+<h1>Admin Panel - User Management</h1>
+
+<%= link_to 'Back to Dashboard', root_path, class: 'btn btn-primary' %>
+
+<table class="table table-striped mt-4">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.first_name %></td>
+        <td><%= user.last_name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.created_at.strftime("%B %d, %Y") %></td>
+        <td>
+          <%= link_to 'Delete', admin_user_path(user), method: :delete, data: { confirm: 'Are you sure you want to delete this user?' }, class: 'btn btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -15,9 +15,22 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
   </head>
 
   <body>
     <%= yield %>
   </body>
 </html>
+<% if admin_signed_in? %>
+  <p>Welcome, <%= current_admin.email %></p>
+  <%= link_to "Logout", destroy_admin_session_path, method: :delete %>
+<% else %>
+  <%= link_to "Admin Login", new_admin_session_path %> |
+  <%= link_to "Sign Up", new_admin_registration_path %> |
+  <%= link_to "Forgot Password?", new_admin_password_path %>
+<% end %>
+  

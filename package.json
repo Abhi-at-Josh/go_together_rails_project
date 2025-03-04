@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "5.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2"
+  }
+}
